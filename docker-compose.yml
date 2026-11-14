@@ -12,11 +12,12 @@ services:
       - DB_SERVER=mongo
       - DB_NAME=yapi
       - DB_PORT=27017
-    # restart: always
+    restart: always
     ports:
-      - 127.0.0.1:3000:3000
+      - 3000:3000
     volumes:
       - ~/data/yapi/log:/home/log # log dir
+    privileged: true
     depends_on:
       - mongo
     entrypoint: "bash /wait-for-it.sh mongo:27017 -- entrypoint.sh"
@@ -25,13 +26,15 @@ services:
   mongo:
     image: mongo
     container_name: mongo
-    # restart: always
+    restart: always
     ports:
-      - 127.0.0.1:27017:27017
+     # - 127.0.0.1:27017:27017
+       - 27017:27017
+    privileged: true
     volumes:
       - ~/data/yapi/mongodb:/data/db #db dir
     networks:
       - back-net
 networks:
   back-net:
-    external: true
+   external: true
